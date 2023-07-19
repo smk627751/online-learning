@@ -1,7 +1,7 @@
 import {useRef, useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import { signIn } from './firebase'
+import { googleSignIn, uploadToCloud } from './firebase'
 function Signup()
 {
     const [image,setImg] = useState()
@@ -50,7 +50,7 @@ function Signup()
                 context.drawImage(image,0,0,canvas.width,canvas.height)
                 const new_url = context.canvas.toDataURL("image/jpeg",80)
                 // console.log(new_url)
-                setImg(new_url)
+                uploadToCloud(user.current.value,new_url).then(imageURL => setImg(imageURL))
             }
         }
     }
@@ -85,8 +85,7 @@ function Signup()
             <input className = {'input'} type="password" ref={cpass} required/>
             <span className = {'show'} onClick={() => show(cpass,setCShow)}>{cshowPass}</span>
             <input className = {'submit'} type ="submit" value="Register"/>
-            <span></span>
-            <input className={'submit'} type="button" onClick={() => signIn(setImg,user,email)} value="continue with google"/>
+            <input className={'submit'} type="button" onClick={() => googleSignIn(setImg,user,email)} value="continue with google"/>
             <span className={'signup'} >Already have an account? <Link to={'/login'}>Sign in</Link></span>
         </form>
         </>
